@@ -2,10 +2,7 @@ name: MiniPro Win CI CD
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
-
+    branches: [ "main" ]
 
 jobs:
   msys2-mingw64:
