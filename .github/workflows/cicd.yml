@@ -1,0 +1,44 @@
+name: MiniPro Win CI CD
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+
+jobs:
+  msys2-mingw64:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    strategy:
+      matrix:
+        include:
+          - { sys: mingw64, env: x86_64 }
+          - { sys: mingw32, env: i686 }
+          - { sys: ucrt64,  env: ucrt-x86_64 }
+    steps:
+      #- uses: actions/checkout@v3
+      #  with:
+      #    repository: https://gitlab.com/DavidGriffith/minipro.git
+      #    ref: master
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: ${{matrix.sys}}
+          update: true
+          install: git base-devel mingw-w64-${{matrix.env}}-toolchain
+      - name: CI-Build
+        run: |
+          echo 'Running in MSYS2!'
+          git clone https://gitlab.com/DavidGriffith/minipro.git -b master .
+          make
+      - uses: actions/upload-artifact@v4.3.6
+        with:
+          name: minpro_${{matrix.sys}}_${{matrix.env}}.zip
+          path: |
+            minipro.exe
+            infoic.xml
+            logicic.xml
+          if-no-files-found: error
