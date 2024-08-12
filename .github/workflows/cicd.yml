@@ -33,7 +33,7 @@ jobs:
           make
       - uses: actions/upload-artifact@v4.3.6
         with:
-          name: minipro_${{matrix.sys}}_${{matrix.env}}.zip
+          name: minipro_${{matrix.sys}}_${{matrix.env}}
           path: |
             minipro.exe
             infoic.xml
